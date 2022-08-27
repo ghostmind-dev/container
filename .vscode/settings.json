@@ -1,0 +1,8 @@
+{
+  "files.exclude": {
+    "**/.gitignore": false
+  },
+  "files.associations": {
+    "*.json": "jsonc"
+  }
+}

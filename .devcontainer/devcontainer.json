@@ -1,0 +1,47 @@
+{
+  "name": "ghostmind-dvc-devcontainer",
+  "dockerFile": "Dockerfile",
+  "overrideCommand": false,
+  "containerUser": "vscode",
+  "postCreateCommand": "/bin/sh  /tmp/library-scripts/post-create.sh",
+  "remoteEnv": {
+    "SYNC_LOCALHOST_KUBECONFIG": "true",
+    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/gsa_key.json",
+  },
+  "containerEnv": {
+    "SRC": "${containerWorkspaceFolder}",
+    "ENV": "dev"
+  },
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.kube,target=/usr/local/share/kube-localhost,type=bind",
+    "source=ghostmind-dvc-zshhistory,target=/commandhistory,type=volume"
+  ],
+  "settings": {
+    "vs-kubernetes": {
+      "disable-linters": [
+        "resource-limits"
+      ]
+    },
+    "shellformat.path": "/usr/local/bin/shfmt_v3.3.1_linux_arm64"
+  },
+  "runArgs": [
+    "--env-file",
+    ".env"
+  ],
+  "extensions": [
+    "ms-azuretools.vscode-docker",
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "esbenp.prettier-vscode",
+    "humao.rest-client",
+    "sdras.inbedby7pm",
+    "william-voyek.vscode-nginx",
+    "foxundermoon.shell-format",
+    "github.copilot",
+    "hashicorp.terraform",
+    "mikestead.dotenv",
+    "https://gql.ghostmind.dev/v1/graphql"
+  ],
+  "forwardPorts": [],
+  "remoteUser": "vscode"
+}
