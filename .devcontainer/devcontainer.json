@@ -27,7 +27,8 @@
   },
   "runArgs": [
     "--env-file",
-    ".env"
+    ".env",
+    "--cap-add=CAP_IPC_LOCK"
   ],
   "extensions": [
     "ms-azuretools.vscode-docker",
