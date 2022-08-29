@@ -71,25 +71,6 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 
 
 ############################################################################
-# INSTALL TERRAFORM
-############################################################################
-
-ENV TERRAFORM_VERSION=0.12.31
-
-RUN cd /tmp \
-    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_arm64.zip \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_arm64.zip -d /usr/bin
-
-#############################################################################
-# INSTALL NODEJS
-#############################################################################
-
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs
-RUN npm --global config set user root 
-RUN npm --global install zx
-
-############################################################################
 # INSTALL GCLOUD
 ############################################################################
 
@@ -97,21 +78,15 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 RUN apt-get update -y && apt-get install moreutils jq google-cloud-sdk -y
 
-############################################################################
-# INSTALL HASURA
-############################################################################
 
-RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+# ############################################################################
+# # INSTALL GITHUB CLI 
+# ############################################################################
 
-############################################################################
-# INSTALL GO
-############################################################################
-
-
-RUN wget https://golang.org/dl/go1.17.3.linux-arm64.tar.gz
-RUN tar -C /usr/local -xzf go1.17.3.linux-arm64.tar.gz
-RUN export PATH=$PATH:/usr/local/go/bin
-
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt update \
+    && apt install gh
 
 
 ############################################################################
@@ -119,15 +94,10 @@ RUN export PATH=$PATH:/usr/local/go/bin
 ############################################################################
 
 RUN apt-get install xz-utils -y
-
 RUN apt-get install libc6-dev -y
-
 USER vscode
-
 RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
-
 RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
-
 
 
 ############################################################################
@@ -142,3 +112,75 @@ RUN gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-key
 RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 RUN apt update
 RUN apt-get install --reinstall -y vault 
+
+
+
+#############################################################################
+# INSTALL NODEJS
+#############################################################################
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y nodejs
+RUN npm --global config set user root 
+RUN npm --global install zx
+
+############################################################################
+# INSTALL GO
+############################################################################
+
+
+RUN wget https://golang.org/dl/go1.17.3.linux-arm64.tar.gz
+RUN tar -C /usr/local -xzf go1.17.3.linux-arm64.tar.gz
+RUN export PATH=$PATH:/usr/local/go/bin
+
+
+
+############################################################################
+# INSTALL ACT
+############################################################################
+
+ENV ACT_VERSION=0.2.30
+
+RUN cd /tmp \
+    && wget https://github.com/nektos/act/releases/download/v${ACT_VERSION}/act_Linux_arm64.tar.gz \
+    && tar -xvf act_Linux_arm64.tar.gz \
+    && mv act /usr/local/bin/act
+
+############################################################################
+# INSTALL TERRAFORM
+############################################################################
+
+ENV TERRAFORM_VERSION=0.12.31
+
+RUN cd /tmp \
+    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_arm64.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_arm64.zip -d /usr/bin
+
+
+############################################################################
+# INSTALL SKAFFOLD
+############################################################################
+
+RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.36.0/skaffold-linux-arm64 \
+    && chmod +x skaffold \ 
+    &&  mv skaffold /usr/local/bin
+
+############################################################################
+# INSTALL KUSTOMIZE
+############################################################################
+
+RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+
+RUN mv ./kustomize /usr/local/bin
+
+############################################################################
+# INSTALL HASURA
+############################################################################
+
+RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+
+############################################################################
+# INSTALL POSTGRESQL-CLIENT
+############################################################################
+
+RUN apt-get -y install postgresql-client
