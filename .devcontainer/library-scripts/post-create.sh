@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-
-
 # ############################################################################
 # # GOOGLE CLOUD PLATFORM SETUP
 # ############################################################################
@@ -25,13 +23,12 @@ fi
 
 sed -i '/plugins=(git)/c\plugins=(git kubectl zsh-autosuggestions gcloud docker)' ~/.zshrc
 
-
 ############################################################################
 # ALIASES
 ############################################################################
 
 cat <<EOT >>~/.zshrc
-    alias home="cd ${SRC}"
+alias home="cd ${SRC}"
 EOT
 
 ############################################################################
@@ -39,7 +36,7 @@ EOT
 ############################################################################
 
 cat <<EOT >>~/.zshrc
-    export PATH=\$PATH:/usr/local/go/bin 
+export PATH=\$PATH:/usr/local/go/bin 
 EOT
 
 ############################################################################
@@ -51,6 +48,5 @@ EOT
 # echo ${GAM_OAUTH2TXT} | base64 -di -w 0 >/home/vscode/bin/gam/oauth2.txt
 
 # cat <<EOT >>~/.zshrc
-#     alias gam="/home/vscode/bin/gam/gam"
+# alias gam="/home/vscode/bin/gam/gam"
 # EOT
-

@@ -77,17 +77,20 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 RUN apt-get update -y && apt-get install moreutils jq google-cloud-sdk -y
+RUN apt-get update
+RUN apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
 
 
 # ############################################################################
 # # INSTALL GITHUB CLI 
 # ############################################################################
 
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-    && apt update \
-    && apt install gh
+ENV GITHUB_CLI=2.14.7
 
+RUN cd /tmp \
+    && wget https://github.com/cli/cli/releases/download/v${GITHUB_CLI}/gh_${GITHUB_CLI}_linux_arm64.tar.gz \
+    && tar -xvf gh_${GITHUB_CLI}_linux_arm64.tar.gz \
+    && mv gh_${GITHUB_CLI}_linux_arm64/bin/gh /usr/local/bin/
 
 ############################################################################
 # INSTALL GAM
