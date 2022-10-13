@@ -1,5 +1,5 @@
 # Note: You can use any Debian/Ubuntu based image you want.
-FROM mcr.microsoft.com/vscode/devcontainers/base:0-bullseye
+FROM mcr.microsoft.com/vscode/devcontainers/base
 
 ENV DOCKER_BUILDKIT=1
 
@@ -13,10 +13,14 @@ ARG USE_MOBY="true"
 ARG USERNAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
+ARG TARGETARCH
+ARG TARGETPLATFORM
 
 ############################################################################
 # COPY FILES
 ############################################################################
+
+
 
 COPY .devcontainer/library-scripts/common-debian.sh /tmp/library-scripts/
 COPY .devcontainer/library-scripts/docker-debian.sh /tmp/library-scripts/
@@ -30,7 +34,7 @@ COPY .devcontainer/library-scripts/kubectl-helm-debian.sh /tmp/library-scripts/
 RUN apt-get update && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
     && /bin/bash /tmp/library-scripts/docker-debian.sh "true" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}" "${USE_MOBY}" \ 
     && /bin/bash /tmp/library-scripts/kubectl-helm-debian.sh "latest" "latest" "none"  \
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scriptsxs
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
 
 # Script copies localhost's ~/.kube/config file into the container and swaps out
 # localhost for host.docker.internal on bash/zsh start to keep them in sync.
@@ -74,27 +78,36 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 # INSTALL GCLOUD
 ############################################################################
 
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-RUN apt-get update -y && apt-get install moreutils jq google-cloud-sdk -y
-RUN apt-get update
-RUN apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+ENV GCLOUD_VERSION=405.0.0
 
 
-# ############################################################################
-# # INSTALL GITHUB CLI 
-# ############################################################################
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm; fi  \
+    && cd /tmp  \
+    && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-${ARCHITECTURE}.tar.gz   \
+    && tar -xf google-cloud-cli-${GCLOUD_VERSION}-linux-${ARCHITECTURE}.tar.gz    \
+    && /tmp/google-cloud-sdk/install.sh  \
+    && mv /tmp/google-cloud-sdk/ /usr/local/lib 
+
+ENV PATH "$PATH:/usr/local/lib/google-cloud-sdk/bin"
+
+RUN gcloud components install gke-gcloud-auth-plugin
+
+
+############################################################################
+# INSTALL GITHUB CLI 
+############################################################################
 
 ENV GITHUB_CLI=2.14.7
 
-RUN cd /tmp \
-    && wget https://github.com/cli/cli/releases/download/v${GITHUB_CLI}/gh_${GITHUB_CLI}_linux_arm64.tar.gz \
-    && tar -xvf gh_${GITHUB_CLI}_linux_arm64.tar.gz \
-    && mv gh_${GITHUB_CLI}_linux_arm64/bin/gh /usr/local/bin/
 
-############################################################################
+RUN cd /tmp \
+    && wget https://github.com/cli/cli/releases/download/v${GITHUB_CLI}/gh_${GITHUB_CLI}_linux_${TARGETARCH}.tar.gz \
+    && tar -xvf gh_${GITHUB_CLI}_linux_${TARGETARCH}.tar.gz \
+    && mv gh_${GITHUB_CLI}_linux_${TARGETARCH}/bin/gh /usr/local/bin/
+
+###########################################################################
 # INSTALL GAM
-############################################################################
+###########################################################################
 
 RUN apt-get install xz-utils -y
 RUN apt-get install libc6-dev -y
@@ -132,8 +145,8 @@ RUN npm --global install zx
 ############################################################################
 
 
-RUN wget https://golang.org/dl/go1.17.3.linux-arm64.tar.gz
-RUN tar -C /usr/local -xzf go1.17.3.linux-arm64.tar.gz
+RUN wget https://golang.org/dl/go1.17.3.linux-${TARGETARCH}.tar.gz
+RUN tar -C /usr/local -xzf go1.17.3.linux-${TARGETARCH}.tar.gz
 RUN export PATH=$PATH:/usr/local/go/bin
 
 
@@ -142,11 +155,12 @@ RUN export PATH=$PATH:/usr/local/go/bin
 # INSTALL ACT
 ############################################################################
 
-ENV ACT_VERSION=0.2.30
+ENV ACT_VERSION=0.2.32
 
-RUN cd /tmp \
-    && wget https://github.com/nektos/act/releases/download/v${ACT_VERSION}/act_Linux_arm64.tar.gz \
-    && tar -xvf act_Linux_arm64.tar.gz \
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm64; fi \
+    && cd /tmp \
+    && wget https://github.com/nektos/act/releases/download/v${ACT_VERSION}/act_Linux_${ARCHITECTURE}.tar.gz \
+    && tar -xvf act_Linux_${ARCHITECTURE}.tar.gz \
     && mv act /usr/local/bin/act
 
 ############################################################################
@@ -156,15 +170,17 @@ RUN cd /tmp \
 ENV TERRAFORM_VERSION=0.12.31
 
 RUN cd /tmp \
-    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_arm64.zip \
-    && unzip terraform_${TERRAFORM_VERSION}_linux_arm64.zip -d /usr/bin
+    && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip -d /usr/bin
 
 
 ############################################################################
 # INSTALL SKAFFOLD
 ############################################################################
 
-RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v1.36.0/skaffold-linux-arm64 \
+ENV SKAFFOLD_VERSION=1.39.2
+
+RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v${SKAFFOLD_VERSION}/skaffold-linux-${TARGETARCH} \
     && chmod +x skaffold \ 
     &&  mv skaffold /usr/local/bin
 

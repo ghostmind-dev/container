@@ -1,4 +1,4 @@
-FROM gcr.io/ghostmind-core/dvc:latest
+FROM ghcr.io/ghostmind-dev/dvc:latest
 
 
 COPY library-scripts/post-create.sh /tmp/library-scripts/
