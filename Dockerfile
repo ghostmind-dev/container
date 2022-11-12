@@ -1,4 +1,3 @@
-# Note: You can use any Debian/Ubuntu based image you want.
 FROM mcr.microsoft.com/vscode/devcontainers/base
 
 ENV DOCKER_BUILDKIT=1
@@ -20,12 +19,9 @@ ARG TARGETPLATFORM
 # COPY FILES
 ############################################################################
 
-
-
 COPY .devcontainer/library-scripts/common-debian.sh /tmp/library-scripts/
 COPY .devcontainer/library-scripts/docker-debian.sh /tmp/library-scripts/
 COPY .devcontainer/library-scripts/kubectl-helm-debian.sh /tmp/library-scripts/
-
 
 ############################################################################
 # DOCKER SETUP
@@ -92,6 +88,16 @@ ENV PATH "$PATH:/usr/local/lib/google-cloud-sdk/bin"
 
 RUN gcloud components install gke-gcloud-auth-plugin
 
+############################################################################
+# AWS CLI
+############################################################################   
+
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=aarch64; fi \
+    && cd /tmp \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-${ARCHITECTURE}.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
+
 
 ############################################################################
 # INSTALL GITHUB CLI 
@@ -140,6 +146,7 @@ RUN apt-get install -y nodejs
 RUN npm --global config set user root 
 RUN npm --global install zx
 
+
 ############################################################################
 # INSTALL GO
 ############################################################################
@@ -147,8 +154,7 @@ RUN npm --global install zx
 
 RUN wget https://golang.org/dl/go1.17.3.linux-${TARGETARCH}.tar.gz
 RUN tar -C /usr/local -xzf go1.17.3.linux-${TARGETARCH}.tar.gz
-RUN export PATH=$PATH:/usr/local/go/bin
-
+ENV PATH "$PATH:/usr/local/go/bin"
 
 
 ############################################################################
@@ -203,3 +209,16 @@ RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bas
 ############################################################################
 
 RUN apt-get -y install postgresql-client
+
+############################################################################
+# RCM
+############################################################################
+
+RUN wget -q https://apt.thoughtbot.com/thoughtbot.gpg.key -O /etc/apt/trusted.gpg.d/thoughtbot.gpg
+RUN echo "deb https://apt.thoughtbot.com/debian/ stable main" | tee /etc/apt/sources.list.d/thoughtbot.list
+RUN apt-get update
+RUN apt-get install rcm
+
+############################################################################
+# THE END
+############################################################################
