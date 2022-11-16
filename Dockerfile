@@ -154,7 +154,8 @@ RUN npm --global install zx
 
 RUN wget https://golang.org/dl/go1.17.3.linux-${TARGETARCH}.tar.gz
 RUN tar -C /usr/local -xzf go1.17.3.linux-${TARGETARCH}.tar.gz
-ENV PATH "$PATH:/usr/local/go/bin"
+ENV PATH "${PATH}:/usr/local/go/bin"
+RUN export PATH=$PATH:/usr/local/go/bin
 
 
 ############################################################################
