@@ -211,14 +211,5 @@ RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bas
 RUN apt-get -y install postgresql-client
 
 ############################################################################
-# RCM
-############################################################################
-
-RUN wget -q https://apt.thoughtbot.com/thoughtbot.gpg.key -O /etc/apt/trusted.gpg.d/thoughtbot.gpg
-RUN echo "deb https://apt.thoughtbot.com/debian/ stable main" | tee /etc/apt/sources.list.d/thoughtbot.list
-RUN apt-get update
-RUN apt-get install rcm
-
-############################################################################
 # THE END
 ############################################################################
