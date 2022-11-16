@@ -24,7 +24,7 @@
         "resource-limits"
       ]
     },
-    "shellformat.path": "/usr/local/bin/shfmt_v3.3.1_linux_arm64"
+    "sellformat.path": "/home/vscode/go/bin/shfmt"
   },
   "runArgs": [
     "--env-file",
