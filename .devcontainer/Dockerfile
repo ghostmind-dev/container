@@ -12,7 +12,7 @@ COPY library-scripts/post-create.sh /tmp/library-scripts/
 
 USER root
 
-RUN /usr/local/go/bin/go install mvdan.cc/sh/v3/cmd/shfmt@latest
+RUN go install mvdan.cc/sh/v3/cmd/shfmt@latest
 
 ############################################################################
 # THE END

@@ -128,12 +128,15 @@ RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
 
 USER root
 
+
+RUN apt update
 RUN apt install -y gpg
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null
 RUN gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
 RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 RUN apt update
-RUN apt-get install --reinstall -y vault 
+# RUN apt-get install --reinstall -y vault 
+RUN apt install vault -y
 
 
 
@@ -173,7 +176,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL TERRAFORM
 ############################################################################
 
-ENV TERRAFORM_VERSION=0.12.31
+ENV TERRAFORM_VERSION=0.14.9
 
 RUN cd /tmp \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
