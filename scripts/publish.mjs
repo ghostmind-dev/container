@@ -33,19 +33,16 @@ const tagInstructionsString = tagInstructions.join(" ");
 // let instructions = `docker buildx build --platform linux/amd64,linux/arm64 --push ${SRC}`;
 // merge with tag instructions
 
-const instructions = `docker buildx build --platform linux/amd64,linux/arm64 ${tagInstructionsString} --push ${SRC}`;
-
-// transfor the instructions into an array
-
-const instructionsArray = instructions.split(" ");
-
 if (!multiplatform) {
   console.log("need to implement non-multiplatform build");
   // await $`docker build -t ghcr.io/ghostmind-dev/dvc:latest ${SRC}`;
   // await $`docker push ghcr.io/ghostmind-dev/dvc:latest`;
 } else {
+  const instructions = `docker buildx build --platform linux/amd64,linux/arm64 ${tagInstructionsString} --push ${SRC}`;
+
+  // transfor the instructions into an array
+
+  const instructionsArray = instructions.split(" ");
   await $`docker buildx create --use`;
   await $`${instructionsArray}`;
-
-  // await $`docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/ghostmind-dev/dvc:latest -t ghcr.io/ghostmind-dev/dvc:terraform0.13 --push ${SRC}`;
 }

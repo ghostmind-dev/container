@@ -176,7 +176,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL TERRAFORM
 ############################################################################
 
-ENV TERRAFORM_VERSION=0.14.9
+ENV TERRAFORM_VERSION=1.0.11
 
 RUN cd /tmp \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
