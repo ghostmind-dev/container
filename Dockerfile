@@ -135,7 +135,6 @@ RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /
 RUN gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
 RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 RUN apt update
-# RUN apt-get install --reinstall -y vault 
 RUN apt install vault -y
 
 
@@ -146,8 +145,8 @@ RUN apt install vault -y
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get install -y nodejs
-RUN npm --global config set user root 
 RUN npm --global install zx
+
 
 
 ############################################################################
@@ -164,7 +163,7 @@ ENV PATH "$PATH:/usr/local/go/bin"
 # INSTALL ACT
 ############################################################################
 
-ENV ACT_VERSION=0.2.32
+ENV ACT_VERSION=0.2.45
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm64; fi \
     && cd /tmp \
@@ -176,7 +175,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL TERRAFORM
 ############################################################################
 
-ENV TERRAFORM_VERSION=1.0.11
+ENV TERRAFORM_VERSION=1.3.7
 
 RUN cd /tmp \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
@@ -221,6 +220,12 @@ RUN wget -q https://apt.thoughtbot.com/thoughtbot.gpg.key -O /etc/apt/trusted.gp
 RUN echo "deb https://apt.thoughtbot.com/debian/ stable main" | tee /etc/apt/sources.list.d/thoughtbot.list
 RUN apt-get update
 RUN apt-get install rcm
+
+############################################################################
+# INSTALL PYTHON
+############################################################################
+
+RUN apt-get install -y python3-pip
 
 ############################################################################
 # THE END

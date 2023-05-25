@@ -9,5 +9,4 @@
 
 # options:
 # --multiplatform      build for linux/amd64,linux/arm64
-
 ```
