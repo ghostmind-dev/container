@@ -87,6 +87,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 ENV PATH "$PATH:/usr/local/lib/google-cloud-sdk/bin"
 
 RUN gcloud components install gke-gcloud-auth-plugin
+RUN gcloud components install beta
 
 ############################################################################
 # AWS CLI
