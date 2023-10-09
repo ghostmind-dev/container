@@ -166,7 +166,7 @@ ENV PATH "$PATH:/usr/local/go/bin"
 # INSTALL ACT
 ############################################################################
 
-ENV ACT_VERSION=0.2.52
+ENV ACT_VERSION=0.2.49
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm64; fi \
     && cd /tmp \
