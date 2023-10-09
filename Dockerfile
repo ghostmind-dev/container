@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/base
+FROM mcr.microsoft.com/vscode/devcontainers/base:0-debian-11
 
 ENV DOCKER_BUILDKIT=1
 
@@ -129,34 +129,35 @@ RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
 
 USER root
 
-
 RUN apt update
 RUN apt install -y gpg
-RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null
-RUN gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
-RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list
 RUN apt update
 RUN apt install vault -y
-
 
 
 #############################################################################
 # INSTALL NODEJS
 #############################################################################
 
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs
-RUN npm --global install zx
+ENV NODE_MAJOR=20
 
-
+RUN apt-get install -y ca-certificates curl gnupg
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update
+RUN apt-get install nodejs -y
 
 ############################################################################
 # INSTALL GO
 ############################################################################
 
+ENV GO_VERSION=1.21.2
 
-RUN wget https://golang.org/dl/go1.17.3.linux-${TARGETARCH}.tar.gz
-RUN tar -C /usr/local -xzf go1.17.3.linux-${TARGETARCH}.tar.gz
+RUN wget https://golang.org/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
+RUN tar -C /usr/local -xzf go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
 ENV PATH "$PATH:/usr/local/go/bin"
 
 
@@ -164,7 +165,7 @@ ENV PATH "$PATH:/usr/local/go/bin"
 # INSTALL ACT
 ############################################################################
 
-ENV ACT_VERSION=0.2.45
+ENV ACT_VERSION=0.2.52
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm64; fi \
     && cd /tmp \
@@ -176,7 +177,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL TERRAFORM
 ############################################################################
 
-ENV TERRAFORM_VERSION=1.3.7
+ENV TERRAFORM_VERSION=1.6.0
 
 RUN cd /tmp \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
@@ -187,7 +188,7 @@ RUN cd /tmp \
 # INSTALL SKAFFOLD
 ############################################################################
 
-ENV SKAFFOLD_VERSION=1.39.2
+ENV SKAFFOLD_VERSION=2.8.0
 
 RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v${SKAFFOLD_VERSION}/skaffold-linux-${TARGETARCH} \
     && chmod +x skaffold \ 

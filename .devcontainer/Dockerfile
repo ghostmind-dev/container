@@ -12,8 +12,6 @@ COPY library-scripts/post-create.sh /tmp/library-scripts/
 
 USER root
 
-RUN go install mvdan.cc/sh/v3/cmd/shfmt@latest
-
 ############################################################################
 # THE END
 ############################################################################
