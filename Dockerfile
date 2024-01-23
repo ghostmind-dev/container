@@ -116,11 +116,11 @@ RUN cd /tmp \
 # INSTALL GAM
 ###########################################################################
 
-RUN apt-get install xz-utils -y
-RUN apt-get install libc6-dev -y
-USER vscode
-RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
-RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
+# RUN apt-get install xz-utils -y
+# RUN apt-get install libc6-dev -y
+# USER vscode
+# RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
+# RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
 
 
 ############################################################################
