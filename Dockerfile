@@ -27,7 +27,7 @@ COPY .devcontainer/library-scripts/kubectl-helm-debian.sh /tmp/library-scripts/
 # DOCKER SETUP
 ############################################################################
 
-RUN apt-get update && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+RUN apt-get clean && apt-get update && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
     && /bin/bash /tmp/library-scripts/docker-debian.sh "true" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}" "${USE_MOBY}" \ 
     && /bin/bash /tmp/library-scripts/kubectl-helm-debian.sh "latest" "latest" "none"  \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts/
@@ -116,11 +116,11 @@ RUN cd /tmp \
 # INSTALL GAM
 ###########################################################################
 
-# RUN apt-get install xz-utils -y
-# RUN apt-get install libc6-dev -y
-# USER vscode
-# RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
-# RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
+RUN apt-get install xz-utils -y
+RUN apt-get install libc6-dev -y
+USER vscode
+RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
+RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
 
 
 ############################################################################
@@ -151,10 +151,21 @@ RUN apt-get update
 RUN apt-get install nodejs -y
 RUN npm --global install zx
 
+
+############################################################################
+# NPM SETUP
+############################################################################
+
+USER vscode
+RUN mkdir -p /home/vscode/.npm-global/lib
+ENV NPM_CONFIG_PREFIX=/home/vscode/.npm-global
+ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
+
 ############################################################################
 # INSTALL GO
 ############################################################################
 
+USER root
 ENV GO_VERSION=1.21.2
 
 RUN wget https://golang.org/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
@@ -216,19 +227,17 @@ RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bas
 RUN apt-get -y install postgresql-client
 
 ############################################################################
-# RCM
-############################################################################
-
-RUN wget -q https://apt.thoughtbot.com/thoughtbot.gpg.key -O /etc/apt/trusted.gpg.d/thoughtbot.gpg
-RUN echo "deb https://apt.thoughtbot.com/debian/ stable main" | tee /etc/apt/sources.list.d/thoughtbot.list
-RUN apt-get update
-RUN apt-get install rcm
-
-############################################################################
 # INSTALL PYTHON
 ############################################################################
 
+RUN apt-get update
 RUN apt-get install -y python3-pip
+
+############################################################################
+# JUPYTER DEPENDENCIES
+############################################################################
+
+RUN apt-get -y install pandoc texlive-xetex texlive-fonts-recommended texlive-plain-generic
 
 ############################################################################
 # THE END
