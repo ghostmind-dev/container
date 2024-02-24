@@ -227,6 +227,15 @@ RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bas
 RUN apt-get -y install postgresql-client
 
 ############################################################################
+# CLOUDFLARED
+############################################################################
+
+RUN sudo mkdir -p --mode=0755 /usr/share/keyrings
+RUN curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+RUN echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/cloudflared.list
+RUN apt-get update && sudo apt-get install cloudflared
+
+############################################################################
 # INSTALL PYTHON
 ############################################################################
 
