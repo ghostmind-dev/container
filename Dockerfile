@@ -177,7 +177,7 @@ ENV PATH "$PATH:/usr/local/go/bin"
 # INSTALL ACT
 ############################################################################
 
-ENV ACT_VERSION=0.2.49
+ENV ACT_VERSION=0.2.61
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm64; fi \
     && cd /tmp \
@@ -271,6 +271,8 @@ ENV DENO_INSTALL=/deno
 RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh && chown -R vscode /deno
 ENV PATH=${DENO_INSTALL}/bin:${PATH}
 ENV DENO_DIR=${DENO_INSTALL}/.cache/deno
+
+USER vscode
 
 
 ############################################################################
