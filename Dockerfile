@@ -45,6 +45,12 @@ ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
 CMD [ "sleep", "infinity" ]
 
 ############################################################################
+# DOCKER BUILDX FLAG
+############################################################################
+    
+ENV BUILDX_NO_DEFAULT_ATTESTATIONS="1"
+
+############################################################################
 # ZSH
 ############################################################################
 
@@ -89,6 +95,14 @@ ENV PATH "$PATH:/usr/local/lib/google-cloud-sdk/bin"
 RUN gcloud components install gke-gcloud-auth-plugin
 RUN gcloud components install beta
 
+ENV GOOGLE_APPLICATION_CREDENTIALS="/tmp/gsa_key.json"
+
+############################################################################
+# KUBE CONFIG
+############################################################################
+
+ENV SYNC_LOCALHOST_KUBECONFIG="true"
+
 ############################################################################
 # AWS CLI
 ############################################################################   
@@ -104,7 +118,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL GITHUB CLI 
 ############################################################################
 
-ENV GITHUB_CLI=2.36.0
+ENV GITHUB_CLI=2.47.0
 
 
 RUN cd /tmp \
@@ -149,8 +163,7 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo 
 RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR}.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
 RUN apt-get update
 RUN apt-get install nodejs -y
-RUN npm --global install zx
-
+ENV NODE_OPTION="--openssl-legacy-provider"
 
 ############################################################################
 # NPM SETUP
@@ -160,6 +173,15 @@ USER vscode
 RUN mkdir -p /home/vscode/.npm-global/lib
 ENV NPM_CONFIG_PREFIX=/home/vscode/.npm-global
 ENV PATH=$NPM_CONFIG_PREFIX/bin:$PATH
+ENV PATH="/home/vscode/.npm-global/bin:${PATH}"
+
+############################################################################
+# INSTALL GLOBAL NPM PACKAGES
+############################################################################
+
+RUN npm --global install zx
+RUN npm --global install npm-run-all
+
 
 ############################################################################
 # INSTALL GO
@@ -194,7 +216,7 @@ ENV TERRAFORM_VERSION=1.6.0
 RUN cd /tmp \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
     && unzip terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip -d /usr/bin
-
+   
 
 ############################################################################
 # INSTALL SKAFFOLD
