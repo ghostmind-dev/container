@@ -181,6 +181,7 @@ ENV PATH="/home/vscode/.npm-global/bin:${PATH}"
 
 RUN npm --global install zx
 RUN npm --global install npm-run-all
+RUN npm --global install nodemon
 
 
 ############################################################################
