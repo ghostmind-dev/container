@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/vscode/devcontainers/base:0-debian-11
+FROM mcr.microsoft.com/vscode/devcontainers/base:debian-11
 
 ENV DOCKER_BUILDKIT=1
 
@@ -300,11 +300,20 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 USER root
 
 ENV DENO_INSTALL=/deno
-RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh && chown -R vscode /deno
+RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.42.4 && chown -R vscode /deno
 ENV PATH=${DENO_INSTALL}/bin:${PATH}
 ENV DENO_DIR=${DENO_INSTALL}/.cache/deno
 
 USER vscode
+
+
+############################################################################
+# INSTALL BUN
+############################################################################
+
+
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/home/vscode/.bun/bin:${PATH}"
 
 
 ############################################################################
