@@ -179,9 +179,9 @@ ENV PATH="/home/vscode/.npm-global/bin:${PATH}"
 # INSTALL GLOBAL NPM PACKAGES
 ############################################################################
 
-RUN npm --global install zx
-RUN npm --global install npm-run-all
-RUN npm --global install nodemon
+RUN npm --global install zx@8.1.1
+RUN npm --global install npm-run-all@4.1.5
+RUN npm --global install nodemon@3.1.1
 
 
 ############################################################################
@@ -299,8 +299,10 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 
 USER root
 
+ENV DENO_VERSION=v1.43.6
+
 ENV DENO_INSTALL=/deno
-RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.42.4 && chown -R vscode /deno
+RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s ${DENO_VERSION} && chown -R vscode /deno
 ENV PATH=${DENO_INSTALL}/bin:${PATH}
 ENV DENO_DIR=${DENO_INSTALL}/.cache/deno
 
