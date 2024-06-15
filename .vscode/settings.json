@@ -1,8 +1,74 @@
 {
+  "files.autoSave": "off",
+  "editor.formatOnSave": true,
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "prettier.singleQuote": true,
   "files.exclude": {
-    "**/.gitignore": false
+    "**/.gitignore": true,
+    "**/.git": true,
+    "**/.terraform": true,
+    "**/.tfstate": true,
+    "**/.npmrc": true,
+    "**/dev/dvc-command": true,
+    "**/.env.backup": true,
+    "**/.dockerignore": true,
+    "**/dvc-command": true,
+    "**/gha**": true,
+    "**/package-lock.json": true,
+    "**/node_modules": true,
+    "**/__pycache__": true,
+    "**/.next": true,
+    "**/.terraform.lock.hcl": true,
+    "**/backend.tf": true,
+    "**/versions.tf": true,
+    "**/.npmignore": true,
+    "**/.env": true
   },
   "files.associations": {
     "*.json": "jsonc"
-  }
+  },
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.cacheOnSave": true,
+  "deno.path": "/deno/bin/deno",
+  "deno.cache": "/deno/.cache",
+  "deno.config": "/home/vscode/deno.json",
+  "deno.disablePaths": [
+    "/workspaces/play/actions/gcloud/app/src",
+    "/workspaces/play/actions/run/app/src",
+    "/workspaces/play/actions/vault/app/src",
+    "/workspaces/play/actions/terraform/app/src",
+    "/workspaces/play/actions/hasura/app/src"
+  ],
+  "vsicons.associations.folders": [
+    { "icon": "app", "extensions": ["play"], "format": "svg" },
+    { "icon": "log", "extensions": ["scripts"], "format": "svg" },
+    { "icon": "audio", "extensions": ["dev"], "format": "svg" },
+    { "icon": "bloc", "extensions": ["actions"], "format": "svg" },
+    { "icon": "docker", "extensions": ["container"], "format": "svg" },
+    { "icon": "e2e", "extensions": ["workflows"], "format": "svg" },
+    { "icon": "cubit", "extensions": ["library-scripts"], "format": "svg" },
+    { "icon": "buildkite", "extensions": ["gcloud"], "format": "svg" },
+    { "icon": "buildkite", "extensions": ["hasura"], "format": "svg" },
+    { "icon": "buildkite", "extensions": ["run"], "format": "svg" },
+    { "icon": "buildkite", "extensions": ["terraform"], "format": "svg" },
+    { "icon": "buildkite", "extensions": ["vault"], "format": "svg" }
+  ],
+  "vsicons.associations.files": [
+    { "icon": "config", "extensions": [".env.local"], "format": "svg" },
+    { "icon": "config", "extensions": [".env.dev"], "format": "svg" },
+    { "icon": "config", "extensions": [".env.prod"], "format": "svg" },
+    { "icon": "pytyped", "extensions": [".toml"], "format": "svg" },
+    { "icon": "map", "extensions": [".md"], "format": "svg" }
+  ],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingImports": "none",
+    "reportMissingModuleSource": "none"
+  },
+  "json.schemas": [
+    {
+      "fileMatch": ["**/meta.json"],
+      "url": "https://raw.githubusercontent.com/ghostmind-dev/config/main/config/meta/schema.json"
+    }
+  ]
 }

@@ -19,9 +19,9 @@ ARG TARGETPLATFORM
 # COPY FILES
 ############################################################################
 
-COPY .devcontainer/library-scripts/common-debian.sh /tmp/library-scripts/
-COPY .devcontainer/library-scripts/docker-debian.sh /tmp/library-scripts/
-COPY .devcontainer/library-scripts/kubectl-helm-debian.sh /tmp/library-scripts/
+COPY lib/common-debian.sh /tmp/library-scripts/
+COPY lib/docker-debian.sh /tmp/library-scripts/
+COPY lib/kubectl-helm-debian.sh /tmp/library-scripts/
 
 ############################################################################
 # DOCKER SETUP
@@ -34,7 +34,7 @@ RUN apt-get clean && apt-get update && /bin/bash /tmp/library-scripts/common-deb
 
 # Script copies localhost's ~/.kube/config file into the container and swaps out
 # localhost for host.docker.internal on bash/zsh start to keep them in sync.
-COPY .devcontainer/library-scripts/copy-kube-config.sh /usr/local/share/
+COPY lib/copy-kube-config.sh /usr/local/share/
 RUN chown ${USERNAME}:root /usr/local/share/copy-kube-config.sh \
     && echo "source /usr/local/share/copy-kube-config.sh" | tee -a /root/.bashrc /root/.zshrc /home/${USERNAME}/.bashrc >>/home/${USERNAME}/.zshrc
 

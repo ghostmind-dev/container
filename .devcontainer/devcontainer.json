@@ -1,32 +1,40 @@
 {
-  "name": "ghostmind-dvc-devcontainer",
-  "dockerFile": "Dockerfile",
+  "name": "play",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "PROJECT_DIR": "${env:HOME}${env:USERPROFILE}/projects/container/dvc"
+    }
+  },
   "overrideCommand": false,
   "containerUser": "vscode",
-  "postCreateCommand": "/bin/sh  /tmp/library-scripts/post-create.sh",
-  "initializeCommand": "echo 'Login to gcr.io private registry'",
+  "postStartCommand": "deno run --allow-all https://raw.githubusercontent.com/ghostmind-dev/init/main/init/main.ts",
+  "postAttachCommand": "deno run --allow-all /usr/local/share/post-attach.ts",
+  "remoteUser": "vscode",
   "remoteEnv": {
-    "SYNC_LOCALHOST_KUBECONFIG": "true",
-    "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/gsa_key.json"
+    "SRC": "${containerWorkspaceFolder}",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
+    "LOCALHOST_SRC": "${env:HOME}${env:USERPROFILE}/projects/container/dvc",
+    "VAULT_ROOT_TOKEN": "${localEnv:VAULT_ROOT_TOKEN}",
+    "VAULT_ADDR": "${localEnv:VAULT_ADDR}"
   },
   "containerEnv": {
-    "SRC": "${containerWorkspaceFolder}",
-    "ENV": "dev"
+    "INIT_RESET_LIVE": "true"
   },
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
+    "source=ghostmind-play-history,target=/commandhistory,type=volume",
     "source=${env:HOME}${env:USERPROFILE}/.kube,target=/usr/local/share/kube-localhost,type=bind",
-    "source=ghostmind-dvc-zshhistory,target=/commandhistory,type=volume"
+    "source=${env:HOME}${env:USERPROFILE}/projects/container/dvc,target=/Users/francoisseguin/projects/container/dvc,type=bind"
+  ],
+  "runArgs": [
+    "--cap-add=CAP_IPC_LOCK",
+    "--cap-add=NET_ADMIN",
+    "--network=host",
+    "--name=devcontainer-container-dvc"
   ],
   "customizations": {
     "vscode": {
-      "settings": {
-        "prettier.singleQuote": true,
-        "vs-kubernetes": {
-          "disable-linters": ["resource-limits"]
-        },
-        "shellformat.path": "/home/vscode/go/bin/shfmt"
-      },
       "extensions": [
         "ms-azuretools.vscode-docker",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
@@ -35,12 +43,32 @@
         "sdras.inbedby7pm",
         "william-voyek.vscode-nginx",
         "foxundermoon.shell-format",
-        "github.copilot",
         "hashicorp.terraform",
-        "mikestead.dotenv"
+        "mikestead.dotenv",
+        "hashicorp.hcl",
+        "equinusocio.vsc-material-theme",
+        "wesbos.theme-cobalt2",
+        "sumneko.lua",
+        "ghostmind.hide-unhide",
+        "tinkertrain.theme-panda",
+        "golang.go",
+        "yinfei.luahelper",
+        "graphql.vscode-graphql",
+        "graphql.vscode-graphql-syntax",
+        "jdinhlife.gruvbox",
+        "styled-components.vscode-styled-components",
+        "be5invis.vscode-icontheme-nomo-dark",
+        "pkief.material-icon-theme",
+        "mtxr.sqltools",
+        "ghostmind.mode-context",
+        "github.copilot-chat",
+        "github.copilot-nightly",
+        "ms-python.python",
+        "prisma.prisma",
+        "bradlc.vscode-tailwindcss",
+        "mariorodeghiero.vue-theme",
+        "denoland.vscode-deno"
       ]
     }
-  },
-  "forwardPorts": [],
-  "remoteUser": "vscode"
+  }
 }
