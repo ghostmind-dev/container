@@ -118,7 +118,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL GITHUB CLI 
 ############################################################################
 
-ENV GITHUB_CLI=2.47.0
+ENV GITHUB_CLI=2.52.0
 
 
 RUN cd /tmp \
