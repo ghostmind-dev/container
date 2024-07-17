@@ -1,5 +1,5 @@
 import type { CustomArgs, CustomOptions } from 'jsr:@ghostmind/run';
-import { $, cd } from 'npm:zx@8.1.2';
+import { $ } from 'npm:zx@8.1.2';
 
 export default async function (_arg: CustomArgs, opts: CustomOptions) {
   $.verbose = true;

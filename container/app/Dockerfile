@@ -299,7 +299,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 
 USER root
 
-ENV DENO_VERSION=v1.43.6
+ENV DENO_VERSION=v1.45.2
 
 ENV DENO_INSTALL=/deno
 RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s ${DENO_VERSION} && chown -R vscode /deno
