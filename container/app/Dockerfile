@@ -90,7 +90,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
     && /tmp/google-cloud-sdk/install.sh  \
     && mv /tmp/google-cloud-sdk/ /usr/local/lib 
 
-ENV PATH "$PATH:/usr/local/lib/google-cloud-sdk/bin"
+ENV PATH="$PATH:/usr/local/lib/google-cloud-sdk/bin"
 
 RUN gcloud components install gke-gcloud-auth-plugin
 RUN gcloud components install beta
@@ -193,7 +193,7 @@ ENV GO_VERSION=1.21.2
 
 RUN wget https://golang.org/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
 RUN tar -C /usr/local -xzf go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
-ENV PATH "$PATH:/usr/local/go/bin"
+ENV PATH="$PATH:/usr/local/go/bin"
 
 
 ############################################################################
@@ -259,16 +259,48 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cl
 RUN apt-get update && sudo apt-get install cloudflared
 
 ############################################################################
-# INSTALL PYTHON
+# PYTHON CONFIG
 ############################################################################
 
-RUN apt-get update
-RUN apt-get install -y python3-pip
+
+RUN sudo apt-get update && sudo apt-get install -y \
+    make \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    wget \
+    curl \
+    llvm \
+    libncurses5-dev \
+    libncursesw5-dev \
+    xz-utils \
+    tk-dev \
+    libffi-dev \
+    liblzma-dev \
+    python3-pip \
+    python3-openssl \
+    git
+
+USER vscode
+
+RUN curl https://pyenv.run | bash
+
+# Set environment variables for pyenv
+ENV PATH="/home/vscode/.pyenv/bin:/home/vscode/.pyenv/shims:${PATH}"
+
+# Install Python 3.12.4 using pyenv
+RUN pyenv install 3.12.4
+RUN pyenv install 3.9.7
+RUN pyenv global 3.12.4
 
 ############################################################################
 # JUPYTER DEPENDENCIES
 ############################################################################
 
+USER root
 
 RUN apt-get -y install pandoc texlive-xetex texlive-fonts-recommended texlive-plain-generic
 
@@ -289,7 +321,7 @@ RUN pip install jupyterlab
 
 
 
-RUN curl -sSL https://install.python-poetry.org | python3 -
+RUN curl -sSL https://install.python-poetry.org | python -
 
 
 
