@@ -294,7 +294,7 @@ ENV PATH="/home/vscode/.pyenv/bin:/home/vscode/.pyenv/shims:${PATH}"
 # Install Python 3.12.4 using pyenv
 RUN pyenv install 3.12.4
 RUN pyenv install 3.9.7
-RUN pyenv global 3.12.4
+RUN pyenv global 3.9.7
 
 ############################################################################
 # JUPYTER DEPENDENCIES
@@ -331,7 +331,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 
 USER root
 
-ENV DENO_VERSION=v1.45.2
+ENV DENO_VERSION=v2.0.3
 
 ENV DENO_INSTALL=/deno
 RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s ${DENO_VERSION} && chown -R vscode /deno
