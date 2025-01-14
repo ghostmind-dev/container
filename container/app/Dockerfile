@@ -132,9 +132,9 @@ RUN cd /tmp \
 
 RUN apt-get install xz-utils -y
 RUN apt-get install libc6-dev -y
-USER vscode
-RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
-RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
+# USER vscode
+# RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
+# RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
 
 
 ############################################################################
@@ -292,7 +292,7 @@ RUN curl https://pyenv.run | bash
 ENV PATH="/home/vscode/.pyenv/bin:/home/vscode/.pyenv/shims:${PATH}"
 
 # Install Python 3.12.4 using pyenv
-RUN pyenv install 3.12.4
+# RUN pyenv install 3.12.5
 RUN pyenv install 3.9.7
 RUN pyenv global 3.9.7
 
@@ -349,6 +349,22 @@ USER vscode
 RUN curl -fsSL https://bun.sh/install | bash
 ENV PATH="/home/vscode/.bun/bin:${PATH}"
 
+
+############################################################################
+# CHROMIUM
+############################################################################
+
+USER root
+
+RUN apt install -y chromium
+RUN apt install -y libnss3-tools
+
+
+############################################################################
+# SET USER
+############################################################################
+
+USER vscode
 
 ############################################################################
 # THE END
