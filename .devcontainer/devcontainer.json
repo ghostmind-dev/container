@@ -22,6 +22,7 @@
     "INIT_RESET_LIVE": "true"
   },
   "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
     "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind",
     "source=ghostmind-play-history,target=/commandhistory,type=volume",
     "source=${env:HOME}${env:USERPROFILE}/projects/container/dvc,target=/Users/francoisseguin/projects/container/dvc,type=bind"

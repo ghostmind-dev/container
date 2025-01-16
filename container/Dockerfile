@@ -50,6 +50,14 @@ CMD [ "sleep", "infinity" ]
     
 ENV BUILDX_NO_DEFAULT_ATTESTATIONS="1"
 
+
+###########################################################################
+# MISC (MIGHT BE IMPORTANT)
+###########################################################################
+
+RUN apt-get install xz-utils -y
+RUN apt-get install libc6-dev -y
+
 ############################################################################
 # ZSH
 ############################################################################
@@ -126,16 +134,6 @@ RUN cd /tmp \
     && tar -xvf gh_${GITHUB_CLI}_linux_${TARGETARCH}.tar.gz \
     && mv gh_${GITHUB_CLI}_linux_${TARGETARCH}/bin/gh /usr/local/bin/
 
-###########################################################################
-# INSTALL GAM
-###########################################################################
-
-RUN apt-get install xz-utils -y
-RUN apt-get install libc6-dev -y
-# USER vscode
-# RUN curl -s -S -L https://gam-shortn.appspot.com/gam-install >/tmp/gam-install.sh
-# RUN chmod +x /tmp/gam-install.sh && /tmp/gam-install.sh -l
-
 
 ############################################################################
 # HASHICORP VAULT
@@ -164,6 +162,8 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesourc
 RUN apt-get update
 RUN apt-get install nodejs -y
 ENV NODE_OPTION="--openssl-legacy-provider"
+
+
 
 ############################################################################
 # NPM SETUP
@@ -243,11 +243,6 @@ RUN mv ./kustomize /usr/local/bin
 
 RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
-############################################################################
-# INSTALL POSTGRESQL-CLIENT
-############################################################################
-
-RUN apt-get -y install postgresql-client
 
 ############################################################################
 # CLOUDFLARED
@@ -291,10 +286,11 @@ RUN curl https://pyenv.run | bash
 # Set environment variables for pyenv
 ENV PATH="/home/vscode/.pyenv/bin:/home/vscode/.pyenv/shims:${PATH}"
 
-# Install Python 3.12.4 using pyenv
 # RUN pyenv install 3.12.5
 RUN pyenv install 3.9.7
 RUN pyenv global 3.9.7
+
+
 
 ############################################################################
 # JUPYTER DEPENDENCIES

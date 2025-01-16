@@ -4,9 +4,9 @@ import { $ } from 'npm:zx@8.1.2';
 export default async function (_arg: CustomArgs, opts: CustomOptions) {
   $.verbose = true;
 
-  const SRC = Deno.env.get('SRC') || 'src';
+  const SRC = Deno.env.get('SRC');
 
-  const CONTAINER = `${SRC}/container/app`;
+  const CONTAINER = `${SRC}/container`;
 
   const tagInstructions = ['-t ghcr.io/ghostmind-dev/dvc:latest'];
 
