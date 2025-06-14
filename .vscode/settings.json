@@ -41,25 +41,127 @@
     "/workspaces/play/actions/hasura/app/src"
   ],
   "vsicons.associations.folders": [
-    { "icon": "app", "extensions": ["play"], "format": "svg" },
-    { "icon": "log", "extensions": ["scripts"], "format": "svg" },
-    { "icon": "audio", "extensions": ["dev"], "format": "svg" },
-    { "icon": "bloc", "extensions": ["actions"], "format": "svg" },
-    { "icon": "docker", "extensions": ["container"], "format": "svg" },
-    { "icon": "e2e", "extensions": ["workflows"], "format": "svg" },
-    { "icon": "cubit", "extensions": ["library-scripts"], "format": "svg" },
-    { "icon": "buildkite", "extensions": ["gcloud"], "format": "svg" },
-    { "icon": "buildkite", "extensions": ["hasura"], "format": "svg" },
-    { "icon": "buildkite", "extensions": ["run"], "format": "svg" },
-    { "icon": "buildkite", "extensions": ["terraform"], "format": "svg" },
-    { "icon": "buildkite", "extensions": ["vault"], "format": "svg" }
+    {
+      "icon": "app",
+      "extensions": [
+        "play"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "log",
+      "extensions": [
+        "scripts"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "audio",
+      "extensions": [
+        "dev"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "bloc",
+      "extensions": [
+        "actions"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "docker",
+      "extensions": [
+        "container"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "e2e",
+      "extensions": [
+        "workflows"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "cubit",
+      "extensions": [
+        "library-scripts"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "buildkite",
+      "extensions": [
+        "gcloud"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "buildkite",
+      "extensions": [
+        "hasura"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "buildkite",
+      "extensions": [
+        "run"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "buildkite",
+      "extensions": [
+        "terraform"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "buildkite",
+      "extensions": [
+        "vault"
+      ],
+      "format": "svg"
+    }
   ],
   "vsicons.associations.files": [
-    { "icon": "config", "extensions": [".env.local"], "format": "svg" },
-    { "icon": "config", "extensions": [".env.dev"], "format": "svg" },
-    { "icon": "config", "extensions": [".env.prod"], "format": "svg" },
-    { "icon": "pytyped", "extensions": [".toml"], "format": "svg" },
-    { "icon": "map", "extensions": [".md"], "format": "svg" }
+    {
+      "icon": "config",
+      "extensions": [
+        ".env.local"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "config",
+      "extensions": [
+        ".env.dev"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "config",
+      "extensions": [
+        ".env.prod"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "pytyped",
+      "extensions": [
+        ".toml"
+      ],
+      "format": "svg"
+    },
+    {
+      "icon": "map",
+      "extensions": [
+        ".md"
+      ],
+      "format": "svg"
+    }
   ],
   "python.analysis.diagnosticSeverityOverrides": {
     "reportMissingImports": "none",
@@ -67,7 +169,9 @@
   },
   "json.schemas": [
     {
-      "fileMatch": ["**/meta.json"],
+      "fileMatch": [
+        "**/meta.json"
+      ],
       "url": "https://raw.githubusercontent.com/ghostmind-dev/config/main/config/meta/schema.json"
     }
   ]
