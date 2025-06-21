@@ -182,6 +182,7 @@ ENV PATH="/home/vscode/.npm-global/bin:${PATH}"
 RUN npm --global install zx@8.1.1
 RUN npm --global install npm-run-all@4.1.5
 RUN npm --global install nodemon@3.1.1
+RUN npm --global install @anthropic-ai/claude-code
 
 
 ############################################################################
@@ -316,9 +317,7 @@ RUN pip install jupyterlab
 ############################################################################
 
 
-
 RUN curl -sSL https://install.python-poetry.org | python -
-
 
 
 ############################################################################
@@ -354,8 +353,6 @@ USER root
 
 RUN apt install -y chromium
 RUN apt install -y libnss3-tools
-
-
 
 
 ############################################################################
