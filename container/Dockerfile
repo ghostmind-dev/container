@@ -335,6 +335,13 @@ ENV DENO_DIR=${DENO_INSTALL}/.cache/deno
 
 USER vscode
 
+############################################################################
+# INSTALL DENO
+############################################################################
+
+
+RUN git clone https://github.com/ghostmind-dev/run.git ${HOME}/run
+RUN deno install --allow-all --force --global --name run ${HOME}/run/run/bin/cmd.ts
 
 ############################################################################
 # INSTALL BUN
