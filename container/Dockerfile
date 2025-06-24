@@ -342,6 +342,7 @@ USER vscode
 
 RUN git clone https://github.com/ghostmind-dev/run.git ${HOME}/run
 RUN deno install --allow-all --force --global --name run ${HOME}/run/run/bin/cmd.ts
+ENV PATH="/home/vscode/.deno/bin:${PATH}"
 
 ############################################################################
 # INSTALL BUN
