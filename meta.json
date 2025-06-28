@@ -6,7 +6,7 @@
   "routines": {
     "publish_empty": "run custom publish empty",
     "publish_base": "run custom publish base",
-    "publish_full": "run custom publish full --latest",
+    "publish_full": "run custom publish full",
     "publish_minimal": "run custom publish minimal"
   }
 }

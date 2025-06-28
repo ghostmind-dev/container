@@ -36,10 +36,10 @@ export default async function (args: CustomArgs, opts: CustomOptions) {
   let tagInstructions: string[] = [];
 
   if (effectiveBranch === 'main') {
-    // Main branch: dockerfile name, version + dockerfile name, and optionally latest
+    // Main branch: dockerfile name, dockerfile name + version, and optionally latest
     tagInstructions = [
       `-t ghcr.io/ghostmind-dev/dvc:${dockerfileName}`,
-      `-t ghcr.io/ghostmind-dev/dvc:${version}-${dockerfileName}`,
+      `-t ghcr.io/ghostmind-dev/dvc:${dockerfileName}-${version}`,
     ];
 
     // Add latest tag only if "latest" argument is provided
@@ -84,9 +84,9 @@ export default async function (args: CustomArgs, opts: CustomOptions) {
   }
 
   // Comment out the actual execution for testing
-  // const instructionsArray = instructions.split(' ');
-  // await $`docker buildx create --use`;
-  // await $`${instructionsArray}`;
+  const instructionsArray = instructions.split(' ');
+  await $`docker buildx create --use`;
+  await $`${instructionsArray}`;
 
   console.log('\n[TESTING MODE] Command execution is commented out.');
 }
