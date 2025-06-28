@@ -2,5 +2,11 @@
   "id": "A_NbRVjR_F_C",
   "version": "1.0.1",
   "name": "dvc",
-  "type": "app"
+  "type": "app",
+  "routines": {
+    "publish_empty": "run custom publish empty",
+    "publish_base": "run custom publish base",
+    "publish_full": "run custom publish full --latest",
+    "publish_minimal": "run custom publish minimal"
+  }
 }
