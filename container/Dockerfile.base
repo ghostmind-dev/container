@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/vscode/devcontainers/base:debian-11
 
-ENV DOCKER_BUILDKIT=1
 
 ############################################################################
 # ARG
@@ -15,6 +14,7 @@ ARG TARGETPLATFORM
 ############################################################################
     
 ENV BUILDX_NO_DEFAULT_ATTESTATIONS="1"
+ENV DOCKER_BUILDKIT=1
 
 
 ###########################################################################
@@ -135,6 +135,7 @@ RUN npm --global install npm-run-all@4.1.5
 RUN npm --global install nodemon@3.1.1
 RUN npm --global install @anthropic-ai/claude-code
 RUN npm --global install @devcontainers/cli
+RUN npm --global install @google/gemini-cli
 
 
 ############################################################################
