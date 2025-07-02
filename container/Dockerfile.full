@@ -1,6 +1,5 @@
 FROM mcr.microsoft.com/vscode/devcontainers/base:debian-11
 
-ENV DOCKER_BUILDKIT=1
 
 ############################################################################
 # ARG
@@ -15,7 +14,7 @@ ARG TARGETPLATFORM
 ############################################################################
     
 ENV BUILDX_NO_DEFAULT_ATTESTATIONS="1"
-
+ENV DOCKER_BUILDKIT=1
 
 ###########################################################################
 # MISC (MIGHT BE IMPORTANT)

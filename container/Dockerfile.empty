@@ -21,6 +21,31 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 
 
 ############################################################################
+# INSTALL DENO
+############################################################################
+
+USER root
+
+ENV DENO_VERSION=v2.0.3
+
+ENV DENO_INSTALL=/deno
+RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s ${DENO_VERSION} && chown -R vscode /deno
+ENV PATH=${DENO_INSTALL}/bin:${PATH}
+ENV DENO_DIR=${DENO_INSTALL}/.cache/deno
+
+USER vscode
+
+############################################################################
+# INSTALL DENO
+############################################################################
+
+
+RUN git clone https://github.com/ghostmind-dev/run.git ${HOME}/run
+RUN deno install --allow-all --force --global --name run ${HOME}/run/run/bin/cmd.ts
+ENV PATH="/home/vscode/.deno/bin:${PATH}"
+
+
+############################################################################
 # SET USER
 ############################################################################
 
