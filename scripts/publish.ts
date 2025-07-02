@@ -103,13 +103,10 @@ export default async function (args: CustomArgs, opts: CustomOptions) {
     Deno.exit(1);
   }
 
-  console.log(`Dockerfile: Dockerfile.${dockerfileName}`);
-  console.log(`Dockerfile path: ${dockerfilePath}`);
-
   // Comment out the actual execution for testing
-  // const instructionsArray = instructions.split(' ');
-  // await $`docker buildx create --use`;
-  // await $`${instructionsArray}`;
+  const instructionsArray = instructions.split(' ');
+  await $`docker buildx create --use`;
+  await $`${instructionsArray}`;
 
   console.log('\n[TESTING MODE] Command execution is commented out.');
 }
