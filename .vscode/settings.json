@@ -163,10 +163,6 @@
       "format": "svg"
     }
   ],
-  "python.analysis.diagnosticSeverityOverrides": {
-    "reportMissingImports": "none",
-    "reportMissingModuleSource": "none"
-  },
   "json.schemas": [
     {
       "fileMatch": [
