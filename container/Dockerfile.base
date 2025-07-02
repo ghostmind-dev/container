@@ -12,12 +12,11 @@ ARG TARGETPLATFORM
 ############################################################################
 # DOCKER BUILDX FLAG
 ############################################################################
-    
+
 ENV BUILDX_NO_DEFAULT_ATTESTATIONS="1"
 ENV DOCKER_BUILDKIT=1
 
-
-###########################################################################
+##########################################################################
 # MISC (MIGHT BE IMPORTANT)
 ###########################################################################
 
@@ -35,7 +34,6 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
     && chown -R $USERNAME /commandhistory \
     && echo $SNIPPET >>"/home/$USERNAME/.zshrc"
 
-
 ############################################################################
 # INSTALL DENO
 ############################################################################
@@ -49,17 +47,33 @@ RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s 
 ENV PATH=${DENO_INSTALL}/bin:${PATH}
 ENV DENO_DIR=${DENO_INSTALL}/.cache/deno
 
-USER vscode
-
 ############################################################################
 # INSTALL DENO
 ############################################################################
 
+USER vscode
 
 RUN git clone https://github.com/ghostmind-dev/run.git ${HOME}/run
 RUN deno install --allow-all --force --global --name run ${HOME}/run/run/bin/cmd.ts
 ENV PATH="/home/vscode/.deno/bin:${PATH}"
 
+
+
+############################################################################
+# INSTALL NODEJS
+############################################################################
+
+USER root
+
+# Install curl if not available and add NodeSource repository
+RUN apt-get update && \
+    apt-get install -y curl && \
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install nodemon globally as root
 
 ############################################################################
 # INSTALL GCLOUD
@@ -67,8 +81,8 @@ ENV PATH="/home/vscode/.deno/bin:${PATH}"
 
 USER root
 
-ENV GCLOUD_VERSION=405.0.0
 
+ENV GCLOUD_VERSION=529.0.0
 
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARCHITECTURE=arm; fi  \
     && cd /tmp  \
@@ -80,10 +94,6 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 ENV PATH="$PATH:/usr/local/lib/google-cloud-sdk/bin"
 
 RUN gcloud components install gke-gcloud-auth-plugin
-RUN gcloud components install beta
-
-ENV GOOGLE_APPLICATION_CREDENTIALS="/tmp/gsa_key.json"
-
 
 
 ############################################################################
@@ -135,7 +145,6 @@ RUN npm --global install npm-run-all@4.1.5
 RUN npm --global install nodemon@3.1.1
 RUN npm --global install @anthropic-ai/claude-code
 RUN npm --global install @devcontainers/cli
-RUN npm --global install @google/gemini-cli
 
 
 ############################################################################
@@ -143,6 +152,7 @@ RUN npm --global install @google/gemini-cli
 ############################################################################
 
 USER root
+
 ENV GO_VERSION=1.21.2
 
 RUN wget https://golang.org/dl/go${GO_VERSION}.linux-${TARGETARCH}.tar.gz
@@ -153,6 +163,8 @@ ENV PATH="$PATH:/usr/local/go/bin"
 # ############################################################################
 # # INSTALL ACT
 # ############################################################################
+
+USER root
 
 ENV ACT_VERSION=0.2.61
 
@@ -166,17 +178,22 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then ARCHITECTURE=x86_64; else ARC
 # INSTALL TERRAFORM
 ############################################################################
 
+USER root
+
 ENV TERRAFORM_VERSION=1.6.0
 
 RUN cd /tmp \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip \
     && unzip terraform_${TERRAFORM_VERSION}_linux_${TARGETARCH}.zip -d /usr/bin
-   
+
 
 
 ############################################################################
 # INSTALL HASURA
 ############################################################################
+
+USER root
+
 
 RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
 
@@ -184,6 +201,8 @@ RUN curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bas
 ############################################################################
 # CLOUDFLARED
 ############################################################################
+
+USER root
 
 RUN sudo mkdir -p --mode=0755 /usr/share/keyrings
 RUN curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
@@ -193,6 +212,8 @@ RUN apt-get update && sudo apt-get install cloudflared
 ############################################################################
 # PYTHON CONFIG
 ############################################################################
+
+USER root
 
 
 RUN sudo apt-get update && sudo apt-get install -y \
@@ -233,6 +254,8 @@ RUN pyenv global 3.9.7
 # INSTALL CURL
 ############################################################################
 
+USER root
+
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ############################################################################
@@ -242,6 +265,17 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 USER root
 
 RUN apt-get install -y postgresql-client
+
+############################################################################
+# INSTALL GLOBAL NPM PACKAGES
+############################################################################
+
+USER root
+
+RUN npm --global install nodemon@3.1.1
+RUN npm --global install @anthropic-ai/claude-code
+RUN npm --global install @devcontainers/cli
+RUN npm --global install @google/gemini-cli
 
 ############################################################################
 # SET USER
