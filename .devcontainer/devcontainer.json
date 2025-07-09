@@ -17,7 +17,7 @@
     "SRC": "${containerWorkspaceFolder}",
     "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
     "LOCALHOST_SRC": "${env:HOME}${env:USERPROFILE}/projects/container/dvc",
-    "VAULT_ROOT_TOKEN": "${localEnv:VAULT_ROOT_TOKEN}",
+    "VAULT_TOKEN": "${localEnv:VAULT_TOKEN}",
     "VAULT_ADDR": "${localEnv:VAULT_ADDR}"
   },
   "containerEnv": {
