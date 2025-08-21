@@ -8,67 +8,45 @@
   },
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/ghostmind-dev/features/zsh": {},
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/ghostmind-dev/features/settings:latest": {},
+    "ghcr.io/ghostmind-dev/features/extensions:latest": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/ghostmind-dev/features/init:latest": {
+      "resetLive": true
+    },
+    "ghcr.io/ghostmind-dev/features/zsh:latest": {
+      "theme": "codespaces"
+    }
   },
-  "postCreateCommand": "deno run --allow-all --reload https://raw.githubusercontent.com/ghostmind-dev/init/main/init/main.ts",
-  "postAttachCommand": "deno run --allow-all /usr/local/share/post-attach.ts",
+  "postCreateCommand": "deno run -A -r jsr:@ghostmind/init",
+  "postStartCommand": "deno run --allow-all /usr/local/share/post-attach.ts",
   "remoteEnv": {
     "SRC": "${containerWorkspaceFolder}",
-    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
     "LOCALHOST_SRC": "${env:HOME}${env:USERPROFILE}/projects/container/dvc",
+    "GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}",
     "VAULT_TOKEN": "${localEnv:VAULT_TOKEN}",
     "VAULT_ADDR": "${localEnv:VAULT_ADDR}"
   },
-  "containerEnv": {
-    "INIT_RESET_LIVE": "true"
-  },
-  "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached",
-    "source=ghostmind-dvc-history,target=/commandhistory,type=volume",
-    "source=${env:HOME}${env:USERPROFILE}/projects/container/dvc,target=/Users/francoisseguin/projects/container/dvc,type=bind"
-  ],
   "runArgs": [
     "--cap-add=CAP_IPC_LOCK",
     "--cap-add=NET_ADMIN",
     "--network=host",
-    "--name=devcontainer-container-dvc"
+    "--env=SSH_AUTH_SOCK=/ssh-agent",
+    "--name=dvc"
+  ],
+  "mounts": [
+    "source=terminal-dvc-history,target=/commandhistory,type=volume",
+    "source=/Volumes/Projects,target=/Volumes/Projects,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.claude.json,target=/home/vscode/.claude.json,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.gemini,target=/home/vscode/.gemini,type=bind",
+    "source=${env:HOME}${env:USERPROFILE}/.cursor,target=/home/vscode/.cursor,type=bind",
+    "type=bind,source=/run/host-services/ssh-auth.sock,target=/ssh-agent",
+    "type=bind,source=${env:HOME}/.ssh/known_hosts,target=/home/vscode/.ssh/known_hosts,readonly"
   ],
   "customizations": {
     "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-docker",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "esbenp.prettier-vscode",
-        "humao.rest-client",
-        "sdras.inbedby7pm",
-        "william-voyek.vscode-nginx",
-        "hashicorp.terraform",
-        "mikestead.dotenv",
-        "hashicorp.hcl",
-        "equinusocio.vsc-material-theme",
-        "wesbos.theme-cobalt2",
-        "sumneko.lua",
-        "ghostmind.hide-unhide",
-        "tinkertrain.theme-panda",
-        "golang.go",
-        "yinfei.luahelper",
-        "graphql.vscode-graphql",
-        "graphql.vscode-graphql-syntax",
-        "jdinhlife.gruvbox",
-        "styled-components.vscode-styled-components",
-        "be5invis.vscode-icontheme-nomo-dark",
-        "pkief.material-icon-theme",
-        "mtxr.sqltools",
-        "ghostmind.mode-context",
-        "github.copilot-chat",
-        "github.copilot-nightly",
-        "ms-python.python",
-        "prisma.prisma",
-        "bradlc.vscode-tailwindcss",
-        "mariorodeghiero.vue-theme",
-        "denoland.vscode-deno"
-      ]
+      "extensions": []
     }
   }
 }

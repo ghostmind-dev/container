@@ -107,6 +107,4 @@ export default async function (args: CustomArgs, opts: CustomOptions) {
   const instructionsArray = instructions.split(' ');
   await $`docker buildx create --use`;
   await $`${instructionsArray}`;
-
-  console.log('\n[TESTING MODE] Command execution is commented out.');
 }
