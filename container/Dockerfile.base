@@ -44,7 +44,7 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 
 USER root
 
-ENV DENO_VERSION=v2.0.3
+ENV DENO_VERSION=v2.4.5
 
 ENV DENO_INSTALL=/deno
 RUN mkdir -p /deno && curl -fsSL https://deno.land/x/install/install.sh | sh -s ${DENO_VERSION} && chown -R vscode /deno
@@ -233,9 +233,8 @@ RUN apt-get install -y postgresql-client
 USER root
 
 RUN npm --global install nodemon@3.1.1
-RUN npm --global install @anthropic-ai/claude-code
-RUN npm --global install @devcontainers/cli
-RUN npm --global install @google/gemini-cli
+RUN npm --global install @devcontainers/cli@0.80.1
+
 
 ############################################################################
 # SET USER
