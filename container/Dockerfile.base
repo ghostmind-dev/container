@@ -227,13 +227,37 @@ USER root
 RUN apt-get install -y postgresql-client
 
 ############################################################################
-# INSTALL GLOBAL NPM PACKAGES
+# INSTALL GLOBAL NPM PACKAGES (NO SUDO, PER-USER PREFIX)
 ############################################################################
 
-USER root
+USER vscode
 
-RUN npm --global install nodemon@3.1.1
-RUN npm --global install @devcontainers/cli@0.80.1
+RUN mkdir -p /home/vscode/.npm-global
+
+ENV NPM_CONFIG_PREFIX=/home/vscode/.npm-global
+ENV PATH="/home/vscode/.npm-global/bin:${PATH}"
+
+RUN mkdir -p "$NPM_CONFIG_PREFIX"
+
+RUN npm install -g nodemon@3.1.1 
+RUN npm install -g @devcontainers/cli@0.80.1
+RUN npm install -g dotenv-cli@10.0.0
+
+
+
+############################################################################
+# INSTALL UV
+############################################################################
+
+USER vscode
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add UV to PATH so it can be found (for vscode user)
+ENV PATH="/home/vscode/.local/bin:$PATH"
+
+# Make sure uv is executable and test it's working
+RUN chmod +x /home/vscode/.local/bin/uv && /home/vscode/.local/bin/uv --version
 
 
 ############################################################################
