@@ -242,6 +242,7 @@ RUN mkdir -p "$NPM_CONFIG_PREFIX"
 RUN npm install -g nodemon@3.1.1 
 RUN npm install -g @devcontainers/cli@0.80.1
 RUN npm install -g dotenv-cli@10.0.0
+RUN npm install -g firebase-tools
 
 
 

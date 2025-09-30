@@ -35,3 +35,14 @@ terraform.rc
 **/dvc-command
 
 dev
+
+
+.history
+
+
+.claude
+
+
+.mcp.json
+
+mcp.json
