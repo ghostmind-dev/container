@@ -218,6 +218,12 @@ USER root
 
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
+ENV UV_TOOL_BIN_DIR="/usr/local/bin"
+ENV UV_TOOL_DIR="/usr/local/share/uv-tools"
+
+ENV PATH="/usr/local/bin:$PATH"
+
+
 ############################################################################
 # INSTALL POSTGRESQL CLIENT
 ############################################################################
