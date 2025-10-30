@@ -204,9 +204,9 @@ RUN curl https://pyenv.run | bash
 # Set environment variables for pyenv
 ENV PATH="/home/vscode/.pyenv/bin:/home/vscode/.pyenv/shims:${PATH}"
 
-# RUN pyenv install 3.12.5
+RUN pyenv install 3.12.7
 RUN pyenv install 3.9.7
-RUN pyenv global 3.9.7
+RUN pyenv global 3.12.7
 
 
 
